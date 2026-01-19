@@ -20,12 +20,12 @@ data/
 │  └─ stopsLandMapped.csv       # mapping between land stops and key areas
 │
 ├─ processed/
-│  └─ winter_processed.parquet  
-│  └─ winter_processed.csv  
-│  └─ spring_processed.parquet  
-│  └─ spring_processed.csv  
-│  └─ summerAutumn_processed.parquet  
-│  └─ summerAutumn_processed.csv  
+│  └─ winterProcessed.parquet  
+│  └─ winterProcessed.csv  
+│  └─ springProcessed.parquet  
+│  └─ springProcessed.csv  
+│  └─ summerAutumnProcessed.parquet  
+│  └─ summerAutumnProcessed.csv  
 ```
 
 

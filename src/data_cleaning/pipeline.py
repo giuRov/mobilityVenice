@@ -43,7 +43,17 @@ def process_validation_data(
         print("=== ACTV validation data processing ===")
         print(f"Start time: {now_string()}")
 
-    # 1) Stops
+    # 1) Temporal de-duplication (on raw stop ids)
+    data1, dedup_stats = deduplicate_within_minutes(
+        validation_data=validation_data,
+        datetime_col=datetime_col,
+        serial_col=serial_col,
+        stop_col=stop_col,
+        minutes=dedup_minutes,
+        return_stats=True,
+    )
+
+    # 2) Stops: build unified reference + apply mapping + add stop metadata
     stops_unified, stop_id_map = build_unified_stops(
         stops_water=stops_water,
         stops_land=stops_land,
@@ -51,8 +61,8 @@ def process_validation_data(
         stops_land_mapped=stops_land_mapped,
     )
 
-    data1 = apply_stop_mapping_and_add_stop_info(
-        validation_data=validation_data,
+    data2 = apply_stop_mapping_and_add_stop_info(
+        validation_data=data1,
         stops_unified=stops_unified,
         stop_id_map=stop_id_map,
         stop_col=stop_col,
@@ -61,16 +71,6 @@ def process_validation_data(
         lon_col="longitude",
         out_lat_col="stop_latitude",
         out_lon_col="stop_longitude",
-    )
-
-    # 2) De-duplication
-    data2, dedup_stats = deduplicate_within_minutes(
-        validation_data=data1,
-        datetime_col=datetime_col,
-        serial_col=serial_col,
-        stop_col=stop_col,
-        minutes=dedup_minutes,
-        return_stats=True,
     )
 
     # 3) Ticket categorisation
@@ -89,7 +89,7 @@ def process_validation_data(
         with_counts=True,
     )
 
-    # Reorder columns (final dataset)
+    # 5) Reorder columns (final dataset)
     preferred_order = [
         datetime_col,
         serial_col,

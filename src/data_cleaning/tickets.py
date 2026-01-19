@@ -181,8 +181,8 @@ def add_ticket_code(
     _add(t_wkrs_year, "6-WKRS")
     _add(t_ret_month, "5-RET")
     _add(t_ret_year, "6-RET")
-    _add(t_res_month, "5")
-    _add(t_res_year, "6")
+    _add(t_res_month, "5-RES")
+    _add(t_res_year, "6-RES")
     _add(t_75min, "7")
 
     norm_series = df[title_col].map(normalise_title)
