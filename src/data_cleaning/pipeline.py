@@ -4,7 +4,7 @@ import pandas as pd
 
 from .stops import build_unified_stops, apply_stop_mapping_and_add_stop_info
 from .dedup import deduplicate_within_minutes
-from .tickets import add_ticket_code, drop_nan_ticket_code
+from .tickets import add_ticket_class, drop_nan_ticket_class
 from .utils import now_string, elapsed_timedelta
 
 
@@ -74,16 +74,17 @@ def process_validation_data(
     )
 
     # 3) Ticket categorisation
-    data3 = add_ticket_code(
+    data3 = add_ticket_class(
         validation_data=data2,
         title_col=title_col,
-        out_col="ticket_code",
+        out_col="ticket_class",
+        user_category_col="user_category",
     )
 
-    # 4) Drop NaN ticket_code
-    data4, nan_ticket_stats = drop_nan_ticket_code(
+    # 4) Drop NaN ticket_class
+    data4, nan_ticket_stats = drop_nan_ticket_class(
         data3,
-        ticket_col="ticket_code",
+        ticket_col="ticket_class",
         title_col=title_col,
         return_stats=True,
         with_counts=True,
@@ -94,16 +95,19 @@ def process_validation_data(
         datetime_col,
         serial_col,
         stop_col,
-        "stop_name",
-        "stop_latitude",
-        "stop_longitude",
-        "title",
-        title_col,
-        "ticket_code",
+        #"stop_name",
+        #"stop_latitude",
+        #"stop_longitude",
+        #"title",
+        #title_col,
+        "ticket_class",
+        "user_category",
     ]
+
     preferred_order = [c for c in preferred_order if c in data4.columns]
-    remaining_cols = [c for c in data4.columns if c not in preferred_order]
-    data4 = data4[preferred_order + remaining_cols]
+    #remaining_cols = [c for c in data4.columns if c not in preferred_order]
+    #data4 = data4[preferred_order + remaining_cols]
+    data4 = data4[preferred_order]
 
     if verbose:
         print(f"End time  : {now_string()}")

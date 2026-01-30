@@ -2,14 +2,16 @@ from typing import Any, Dict, Tuple
 import pandas as pd
 from .utils import normalise_title
 
-def add_ticket_code(
+def add_ticket_class(
     validation_data: pd.DataFrame,
     *,
     title_col: str = "title_description",
-    out_col: str = "ticket_code",
+    out_col: str = "ticket_class",
+    user_category_col: str = "user_category",
 ) -> pd.DataFrame:
     """
-    Assign ticket_code based on title_description (exact lists with light normalisation).
+    Assign ticket_class based on title_description (exact lists with light normalisation),
+    and add user_category derived from ticket_class.
     """
 
     df = validation_data.copy()
@@ -132,14 +134,13 @@ def add_ticket_code(
         "S.TERR+ACTV STUDENTE TR.9", "S.TERR+ACTV ANN STUD TR.4",
     }
 
-    t_wkrs_month = {"ATVO+ACTV MENS.LAV.F1", "ATVO+ACTV MENS.LAV.F2", "ATVO+ACTV MENS.LAV.F3"}
-    t_wkrs_year = {"ATVO+ACTV ANN.LAV.F1", "ATVO+ACTV ANN.LAV.F2", "ATVO+ACTV ANN.LAV.F3"}
-
-    t_ret_month = set()
     t_ret_year = {
         "ABB. OVER75 GRATUITO", "ABBONAMENTO PENSIONATI ACTV",
         "ABB. OVER75 RETE UNICA 50%", "ABB. OVER 75 A20", "ABB. OVER 75 A5",
     }
+
+    #t_wkrs_month = {"ATVO+ACTV MENS.LAV.F1", "ATVO+ACTV MENS.LAV.F2", "ATVO+ACTV MENS.LAV.F3"}
+    #t_wkrs_year = {"ATVO+ACTV ANN.LAV.F1", "ATVO+ACTV ANN.LAV.F2", "ATVO+ACTV ANN.LAV.F3"}
 
     t_res_month = {
         "MENSILE ORDINARIO RETE UNICA", "MENSILE ORDINARIO ISOLE", "MENSILE ORDINARIO EXTRA",
@@ -152,6 +153,7 @@ def add_ticket_code(
         "ARRIVA AEROPORTO O.MENS", "DDGR1201-1297/2022 R.UNICA",
         "ATVO+ACTV MENS.5%.F2", "SUPP MENS.URBANO CHIOGGIA",
         "SUPP MENSILE PEOPLEMOVER", "DDGR1201-1297/2022 EXTRA",
+        "ATVO+ACTV MENS.LAV.F1", "ATVO+ACTV MENS.LAV.F2", "ATVO+ACTV MENS.LAV.F3"
     }
 
     t_res_year = {
@@ -163,6 +165,7 @@ def add_ticket_code(
         "S.TERR+ACTV ANN ORD TR.8", "S.TERR+ACTV ANN ORD TR.7", "S.TERR+ACTV ANN ORD TR.4",
         "ANNUALE PARK+RETE INTERA", "S.TERR+ACTV ANN ORD TR.3", "S.TERR+ACTV ANN ORD TR.5",
         "SUPP. 12 MESI CHIOGGIA",
+        "ATVO+ACTV ANN.LAV.F1", "ATVO+ACTV ANN.LAV.F2", "ATVO+ACTV ANN.LAV.F3"
     }
 
     mapping: Dict[Any, str] = {}
@@ -177,9 +180,6 @@ def add_ticket_code(
     _add(t_7days, "4")
     _add(t_stud_month, "5-STUD")
     _add(t_stud_year, "6-STUD")
-    _add(t_wkrs_month, "5-WKRS")
-    _add(t_wkrs_year, "6-WKRS")
-    _add(t_ret_month, "5-RET")
     _add(t_ret_year, "6-RET")
     _add(t_res_month, "5-RES")
     _add(t_res_year, "6-RES")
@@ -188,19 +188,34 @@ def add_ticket_code(
     norm_series = df[title_col].map(normalise_title)
     df[out_col] = norm_series.map(mapping)
 
+    # user_category (British English spellings already ok)
+    user_category_map: Dict[str, str] = {
+        "1": "Tourists",
+        "2": "Tourists",
+        "3": "Tourists",
+        "4": "Tourists",
+        "5-STUD": "Students",
+        "6-STUD": "Students",
+        "5-RES": "Residents",
+        "6-RES": "Residents",
+        "6-RET": "Retirees",
+        "7": "Occasional Travellers",
+    }
+    df[user_category_col] = df[out_col].map(user_category_map)
+
     return df
 
 
-def drop_nan_ticket_code(
+def drop_nan_ticket_class(
     df: pd.DataFrame,
     *,
-    ticket_col: str = "ticket_code",
+    ticket_col: str = "ticket_class",
     title_col: str = "title_description",
     return_stats: bool = True,
     with_counts: bool = True,
 ) -> Tuple[pd.DataFrame, Dict]:
     """
-    Drop rows with missing ticket_code and report what was removed.
+    Drop rows with missing ticket_class and report what was removed.
 
     Returns:
     - cleaned_df
