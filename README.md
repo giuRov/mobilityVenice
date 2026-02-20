@@ -1,4 +1,4 @@
-# ACTV Validation Data  
+# Smart Card Data in Venice 
 ### Cleaning Pipeline and Interactive Prototype
 
 This repository provides a **reproducible Python workflow** for cleaning ACTV ticket
