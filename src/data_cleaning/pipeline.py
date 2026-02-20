@@ -67,10 +67,8 @@ def process_validation_data(
         stop_id_map=stop_id_map,
         stop_col=stop_col,
         name_col="stop_name",
-        lat_col="latitude",
-        lon_col="longitude",
-        out_lat_col="stop_latitude",
-        out_lon_col="stop_longitude",
+        out_lat_col="stop_lat",
+        out_lon_col="stop_long",
     )
 
     # 3) Ticket categorisation
@@ -108,6 +106,7 @@ def process_validation_data(
     #remaining_cols = [c for c in data4.columns if c not in preferred_order]
     #data4 = data4[preferred_order + remaining_cols]
     data4 = data4[preferred_order]
+    data4 = data4.rename(columns={'stop': 'loc_id'})
 
     if verbose:
         print(f"End time  : {now_string()}")

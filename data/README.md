@@ -48,22 +48,31 @@ The raw validation datasets contain individual ticket validation records generat
 2. **Stop reference data**
 Several auxiliary files describe the spatial structure of the transport network:
 - `stopsWater.csv`: water transport stops with original identifiers, names, and geographic coordinates:
-   - `stop`: unique identifier of the public transport stop;
+   - `stop_id`: unique identifier of the public transport stop;
    - `stop_name`: name of the public transport stop;
-   - `latitude`: latitude coordinate of the stop;
-   - `longitude`: longitude coordinate of the stop;
+   - `stop_lat`: latitude coordinate of the stop;
+   - `stop_long`: longitude coordinate of the stop;
 - `stopsLand.csv`: land transport stops with original identifiers and coordinates (same columns as `stopsWater.csv`);
-- `landKeyAreas.csv`: a reduced set of five aggregated land key areas used to aggregate land transport stops (same columns as `stopsWater.csv`);
+- `landKeyAreas.csv`: a reduced set of five aggregated land key areas used to aggregate land transport stops:
+   - `area_id`: identifier of the land area.
+   - `area_name`: name of the land area;
+   - `area_lat`: latitude of the land area;
+   - `area_long`: longitude of the land area.
 - `stopsLandMapped.csv`: mapping between original land stop identifiers and aggregated land key areas:
-   - `stop`: unique identifier of the public transport stop;
-   - `stop_mapping`: identifier of the aggregated land-based stop representing the corresponding key area.
+   - `stop_id`: identifier of the public transport stop;
+   - `area_id`: identifier of the land area the stop belongs to.
      
 
 ## Processed data (`data/processed`)
 The processed datasets are generated using the data cleaning pipeline provided in this repository.
 
-Each raw dataset (Carnival, Spring, Film Festival) is processed independently using the same pipeline to ensure comparability across periods.
-
+Each raw dataset (winter, spring, summerAutumn) is processed independently using the same pipeline to ensure comparability across periods.
+The processed datasets are characterised by the following attributes:
+- `serial`: serial number associated with the travel ticket;
+- `loc_id`:  if the travel ticket validation occurred at a water bus stop, the value is the identifier of the public transport stop, otherwise it is the identifier of the corresponding land area;
+- `stop_name`: name of the stop where the validation occurred;
+- `ticket_class_id`: identifier of the ticket class associated with the travel ticket title;
+- `user_category`: name of the user category the ticket class belongs to.
 
 
 ## File formats

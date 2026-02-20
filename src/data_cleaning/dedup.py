@@ -5,7 +5,7 @@ def deduplicate_within_minutes(
     *,
     datetime_col: str = "validation_datetime",
     serial_col: str = "serial",
-    stop_col: str = "stop",
+    stop_col: str = "stop_id",
     minutes: int = 5,
     return_stats: bool = True,
 ):

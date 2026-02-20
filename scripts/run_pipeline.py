@@ -41,8 +41,8 @@ def main():
     missing_path = raw / "missing_stops.csv"
     if args.drop_missing_stops and missing_path.exists():
         missing_stops_df = pd.read_csv(missing_path)
-        missing_stops = set(missing_stops_df["stop"].unique())
-        validation = validation.loc[~validation["stop"].isin(missing_stops)].copy()
+        missing_stops = set(missing_stops_df["stop_id"].unique())
+        validation = validation.loc[~validation["stop_id"].isin(missing_stops)].copy()
 
     processed, stops_unified, stop_id_map, dedup_stats, nan_ticket_stats = process_validation_data(
         validation_data=validation,
@@ -60,7 +60,7 @@ def main():
 
     #stops_unified.to_csv(out / "stops_unified.csv", index=False)
 
-    pd.DataFrame([{"stop": k, "stop_mapping": v} for k, v in stop_id_map.items()])
+    pd.DataFrame([{"stop_id": k, "area_id": v} for k, v in stop_id_map.items()])
 
     stats = {"dedup_stats": dedup_stats, "nan_ticket_stats": nan_ticket_stats}
     (out / f"{validations_path.stem}.json").write_text(json.dumps(stats, indent=2), encoding="utf-8")

@@ -174,32 +174,32 @@ def add_ticket_class(
         for t in titles:
             mapping[normalise_title(t)] = code
 
-    _add(t_24h, "1")
-    _add(t_48h, "2")
-    _add(t_72h, "3")
-    _add(t_7days, "4")
-    _add(t_stud_month, "5-STUD")
-    _add(t_stud_year, "6-STUD")
-    _add(t_ret_year, "6-RET")
-    _add(t_res_month, "5-RES")
-    _add(t_res_year, "6-RES")
-    _add(t_75min, "7")
+    _add(t_24h, "D-1")
+    _add(t_48h, "D-2")
+    _add(t_72h, "D-3")
+    _add(t_7days, "D-4")
+    _add(t_stud_month, "M-STUD")
+    _add(t_stud_year, "Y-STUD")
+    _add(t_ret_year, "RET")
+    _add(t_res_month, "M-RES")
+    _add(t_res_year, "Y-RES")
+    _add(t_75min, "75")
 
     norm_series = df[title_col].map(normalise_title)
     df[out_col] = norm_series.map(mapping)
 
     # user_category (British English spellings already ok)
     user_category_map: Dict[str, str] = {
-        "1": "Tourists",
-        "2": "Tourists",
-        "3": "Tourists",
-        "4": "Tourists",
-        "5-STUD": "Students",
-        "6-STUD": "Students",
-        "5-RES": "Residents",
-        "6-RES": "Residents",
-        "6-RET": "Retirees",
-        "7": "Occasional Travellers",
+        "D-1": "Tourists",
+        "D-2": "Tourists",
+        "D-3": "Tourists",
+        "D-4": "Tourists",
+        "M-STUD": "Students",
+        "Y-STUD": "Students",
+        "M-RES": "Residents",
+        "Y-RES": "Residents",
+        "RET": "Retirees",
+        "75": "Occasional Travellers",
     }
     df[user_category_col] = df[out_col].map(user_category_map)
 
@@ -241,12 +241,30 @@ def drop_nan_ticket_class(
         .tolist()
     )
 
+    # Unique title stats (denominator: all unique titles in the dataset)
+    total_unique_titles = (
+        df[title_col]
+        .dropna()
+        .astype(str)
+        .nunique()
+    )
+
+    removed_unique_titles_count = len(removed_unique_titles)
+
+    removed_unique_titles_percentage = (
+        round((removed_unique_titles_count / total_unique_titles * 100), 2)
+        if total_unique_titles
+        else 0.0
+    )
+
     stats: Dict[str, Any] = {
         "total_before": total_before,
         "total_after": total_after,
         "removed_rows": removed_rows,
         "removed_percentage": round((removed_rows / total_before * 100), 2) if total_before else 0.0,
-        "removed_unique_titles_count": len(removed_unique_titles),
+        "total_unique_titles": int(total_unique_titles),
+        "removed_unique_titles_count": removed_unique_titles_count,
+        "removed_unique_titles_percentage": removed_unique_titles_percentage,
         "removed_unique_titles": removed_unique_titles,
     }
 

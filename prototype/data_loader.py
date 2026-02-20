@@ -3,7 +3,7 @@
 from __future__ import annotations
 from pathlib import Path
 import pandas as pd
-from .stops import build_unified_stops, apply_stop_mapping_and_add_stop_info
+from .stops import build_unified_stops, apply_area_id_and_add_stop_info
 
 
 def load_dataset(
@@ -28,7 +28,7 @@ def load_dataset(
         raise ValueError("Unsupported file extension. Use .csv or .parquet")
 
     # Only require what the validations file should contain
-    required_base = {"validation_datetime", "ticket_class", "stop"}
+    required_base = {"validation_datetime", "ticket_class", "loc_id"}
     missing = required_base - set(df.columns)
     if missing:
         raise ValueError(
@@ -54,7 +54,7 @@ def load_dataset(
     )
 
     # Apply mapping and join metadata
-    df = apply_stop_mapping_and_add_stop_info(
+    df = apply_area_id_and_add_stop_info(
         validation_data=df,
         stops_unified=stops_unified,
         stop_id_map=stop_id_map,
@@ -64,10 +64,10 @@ def load_dataset(
     required_final = {
         "validation_datetime",
         "ticket_class",
-        "stop",
+        "loc_id",
         "stop_name",
-        "stop_latitude",
-        "stop_longitude",
+        "stop_lat",
+        "stop_long",
     }
     missing_final = required_final - set(df.columns)
     if missing_final:
