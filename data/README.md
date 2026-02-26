@@ -10,21 +10,18 @@ Raw and processed data are not versioned in this repository. Raw and processed d
 ```text
 data/
 ├─ raw/
-│  ├─ winter.csv             
-│  ├─ spring.csv        
-│  ├─ summerAutumn.csv             
+│  ├─ winter_raw.csv             
+│  ├─ spring_raw.csv        
+│  ├─ summerAutumn_raw.csv             
 │  ├─ stopsWater.csv            # water transport stops
 │  ├─ stopsLand.csv             # land transport stops
 │  ├─ landKeyAreas.csv          # aggregated land key areas
 │  └─ stopsLandMapped.csv       # mapping between land stops and key areas
 │
 ├─ processed/
-│  └─ winterProcessed.parquet  
-│  └─ winterProcessed.csv  
-│  └─ springProcessed.parquet  
-│  └─ springProcessed.csv  
-│  └─ summerAutumnProcessed.parquet  
-│  └─ summerAutumnProcessed.csv  
+│  └─ winter.csv  
+│  └─ spring.csv  
+│  └─ summerAutumn.csv  
 ```
 
 
@@ -63,9 +60,9 @@ Several auxiliary files describe the spatial structure of the transport network:
      
 
 ## Processed data (`data/processed`)
-The processed datasets are generated using the data cleaning pipeline provided in this repository.
+The processed datasets are generated using the data processing pipeline provided in this repository.
 
-Each raw dataset (winter, spring, summerAutumn) is processed independently using the same pipeline to ensure comparability across periods.
+Each raw dataset is processed independently using the same pipeline to ensure comparability across periods.
 The processed datasets are characterised by the following attributes:
 - `serial`: serial number associated with the travel ticket;
 - `loc_id`:  if the travel ticket validation occurred at a water bus stop, the value is the identifier of the public transport stop, otherwise it is the identifier of the corresponding land area;
@@ -75,7 +72,6 @@ The processed datasets are characterised by the following attributes:
 
 
 ## File formats
-Processed data are distributed in multiple formats:
-- **Parquet** (`.parquet`): primary format used to reduce file size, preserve data types, and improve performance on large datasets;
-- **CSV** (`.csv`): provided for interoperability with tools that do not support Parquet;
-- **JSON** (`.json`): contains summary statistics and metadata describing the processing outcomes (e.g. number of records before and after cleaning). 
+Processed data are distributed in the following formats:
+- **CSV** (`.csv`): contains the processed validation records;
+- **JSON** (`.json`): contains summary statistics and metadata describing the processing outcomes (e.g. number of records before and after cleaning).
