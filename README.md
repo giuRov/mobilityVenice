@@ -169,7 +169,7 @@ Example run via the helper script (for the file `winter.csv`):
 python scripts/run_pipeline.py \
   --raw-dir data/raw \
   --out-dir data/processed \
-  --validations winter.csv \
+  --validations winter_raw.csv \
   --dedup-minutes 5 \ 
   --output-prefix outputFile 
 ```
