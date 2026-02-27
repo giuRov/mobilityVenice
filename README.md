@@ -98,8 +98,9 @@ The prototype is intended for **exploratory analysis and visual inspection** and
 ## Data availability
 Upon acceptance, the raw ACTV smart card validation data (1.58 GB), the associated stop location dataset 
 (80 kB), and the processed datasets (1.14 GB) will be made publicly available on Zenodo. 
+
 To enable verification of the processing pipeline and the implemented tool, we have provided a small sample 
-dataset consisting of 200 validation records. 
+dataset consisting of 200 validation records (`data/raw/`). 
 
 <!-- Raw and processed datasets are **not versioned** in this repository.-->
 
