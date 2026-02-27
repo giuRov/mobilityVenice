@@ -27,9 +27,7 @@ def create_app(df: pd.DataFrame) -> dash.Dash:
 
     app.layout = html.Div(
         [
-            # -------------------------
             # Left panel: controls
-            # -------------------------
             html.Div(
                 children=[
                     html.H3(
@@ -73,7 +71,7 @@ def create_app(df: pd.DataFrame) -> dash.Dash:
                             {"label": "1 Day", "value": "D-1"},
                             {"label": "2 Days", "value": "D-2"},
                             {"label": "3 Days", "value": "D-3"},
-                            {"label": "7 Days", "value": "D-4"},
+                            {"label": "7 Days", "value": "D-7"},
                             {"label": "Monthly Students", "value": "M-STUD"},
                             {"label": "Yearly Students", "value": "Y-STUD"},
                             {"label": "Monthly Residents", "value": "M-RES"},
@@ -118,9 +116,7 @@ def create_app(df: pd.DataFrame) -> dash.Dash:
                 },
             ),
 
-            # -------------------------
             # Right panel: outputs
-            # -------------------------
             html.Div(
                 children=[
                     dcc.Loading(dcc.Graph(id="mymap"), type="default"),

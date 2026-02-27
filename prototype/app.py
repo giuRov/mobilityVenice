@@ -1,16 +1,25 @@
 #!/usr/bin/env python3
 """
-Dash prototype for visualising ACTV validations.
+Dash prototype for visualising ACTV validation data.
 
-Usage (from repo root):
-  python prototype/app.py --data data/processed/validations_processed.parquet
-  python prototype/app.py --data data/processed/carnival_processed.csv
+Usage (from the repository root):
+  python prototype/app.py --data data/processed/winter.csv
 
-Notes:
-- The input dataset is expected to contain at least:
-  - validation_datetime (datetime or parseable string)
-  - ticket_class (e.g., "1", "2", "3", "4", ...)
-  - stop, stop_name, stop_latitude, stop_longitude
+Inputs
+------
+Processed validations dataset (.csv or .parquet) containing at least:
+  - validation_datetime : validation timestamp
+  - ticket_class : ticket class identifier (e.g. "D-1", "D-2", "D-3", "D-7")
+  - user_category : derived user category
+  - loc_id : unified stop identifier
+
+Additional reference datasets (optional, default paths provided):
+  - stopsWater.csv
+  - stopsLandMapped.csv
+  - landKeyAreas.csv
+
+These reference tables are used to reconstruct stop names and coordinates
+for the spatial visualisation.
 """
 
 from __future__ import annotations
@@ -23,9 +32,6 @@ from .data_loader import load_dataset
 from .dash_app import create_app
 
 
-# -----------------------------------------------------------------------------
-# CLI
-# -----------------------------------------------------------------------------
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run the Dash prototype app.")
     parser.add_argument(
@@ -87,13 +93,3 @@ def main() -> None:
 if __name__ == "__main__":
     main()
 
-
-# Example usage:
-# python -m prototype.app --data data/processed/winterProcessed.csv
-
-# Example with custom stop reference files:
-# python -m prototype.app \
-#   --data data/processed/winterProcessed.csv \
-#   --stops-water data/raw/stopsWater.csv \
-#   --stops-land-mapped data/raw/stopsLandMapped.csv \
-#   --land-key-areas data/raw/landKeyAreas.csv

@@ -3,7 +3,7 @@ import pandas as pd
 
 def build_unified_stops(
     stops_water: pd.DataFrame,
-    stops_land: pd.DataFrame,  # kept for QA only
+    stops_land: pd.DataFrame, 
     land_key_areas: pd.DataFrame,
     stops_land_mapped: pd.DataFrame,
 ) -> Tuple[pd.DataFrame, Dict]:
@@ -14,7 +14,7 @@ def build_unified_stops(
 
     Expected columns:
     - stops_water:       ['stop_id', 'stop_name', 'stop_lat', 'stop_long']
-    - stops_land:        ['stop_id', 'stop_name', 'stop_lat', 'stop_long']  (not strictly required here)
+    - stops_land:        ['stop_id', 'stop_name', 'stop_lat', 'stop_long']  
     - land_key_areas:    ['area_id', 'area_name', 'area_lat', 'area_long']  (stop_id = key area id)
     - stops_land_mapped: ['stop_id', 'area_id']                             (original land stop -> key area stop)
 
@@ -38,7 +38,7 @@ def build_unified_stops(
         "area_long": "stop_long",
     })[["stop_id", "stop_name", "stop_lat", "stop_long"]]
 
-    # Water stops already in correct schema
+    # Water stops 
     water_stops = stops_water[["stop_id", "stop_name", "stop_lat", "stop_long"]]
 
     stops_unified = (
@@ -74,7 +74,7 @@ def apply_stop_mapping_and_add_stop_info(
 
     out = validation_data.copy()
 
-    # Keep original stop id for QA
+    # Keep original stop id for reference 
     out["stop_id_original"] = out[stop_col]
 
     # area_id only for land stops (NaN for water)

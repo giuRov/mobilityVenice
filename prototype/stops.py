@@ -238,7 +238,7 @@ def apply_area_id_and_add_stop_info(
         return out
 
     # ------------------------------------------------------------------
-    # Optional diagnostic report for QA / reproducibility checks.
+    # Diagnostic report 
     # ------------------------------------------------------------------
     report = {
         "n_rows": int(len(out)),

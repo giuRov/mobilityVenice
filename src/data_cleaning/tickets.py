@@ -10,8 +10,13 @@ def add_ticket_class(
     user_category_col: str = "user_category",
 ) -> pd.DataFrame:
     """
-    Assign ticket_class based on title_description (exact lists with light normalisation),
-    and add user_category derived from ticket_class.
+    Assign `ticket_class` from `title_description` using title lists
+    with light normalisation, and derive `user_category` from `ticket_class`.
+
+    Notes
+    -----
+    - Matching is performed on a normalised version of the title (see `normalise_title`).
+    - Titles not present in the mapping are assigned NaN in `ticket_class`.
     """
 
     df = validation_data.copy()
@@ -139,16 +144,12 @@ def add_ticket_class(
         "ABB. OVER75 RETE UNICA 50%", "ABB. OVER 75 A20", "ABB. OVER 75 A5",
     }
 
-    #t_wkrs_month = {"ATVO+ACTV MENS.LAV.F1", "ATVO+ACTV MENS.LAV.F2", "ATVO+ACTV MENS.LAV.F3"}
-    #t_wkrs_year = {"ATVO+ACTV ANN.LAV.F1", "ATVO+ACTV ANN.LAV.F2", "ATVO+ACTV ANN.LAV.F3"}
-
     t_res_month = {
         "MENSILE ORDINARIO RETE UNICA", "MENSILE ORDINARIO ISOLE", "MENSILE ORDINARIO EXTRA",
         "SUPP MENS.NAVIGAZIONE", "MENSILE ORD. RES. PELLESTRINA", "ABB. MENSILE CHIOGGIA",
         "ATVO+ACTV MENS.ORD.F1", "ABBONAMENTO 30 GG.PEOPLEMOVER", "ATVO+ACTV MENS.ORD.F2",
         "ABB MENSILE PEOPLEMOVER", "SUPP MENS.AUTOMOBILISTICO",
         "ATVO+ACTV MENS.20%.F1", "ATVO+ACTV MENS.20%.F2", "ATVO+ACTV MENS.20%.F3",
-        "MENS. COSE ANIMALI RETE INTERA", "MENS. COSE ANIMALI RETE UNICA",
         "MENSILE PARK+RETE INTERA", "ATVO+ACTV MENS.ORD.F3",
         "ARRIVA AEROPORTO O.MENS", "DDGR1201-1297/2022 R.UNICA",
         "ATVO+ACTV MENS.5%.F2", "SUPP MENS.URBANO CHIOGGIA",
@@ -173,11 +174,11 @@ def add_ticket_class(
     def _add(titles, code: str) -> None:
         for t in titles:
             mapping[normalise_title(t)] = code
-
+    # Build mapping for all supported ticket classes based on title lists
     _add(t_24h, "D-1")
     _add(t_48h, "D-2")
     _add(t_72h, "D-3")
-    _add(t_7days, "D-4")
+    _add(t_7days, "D-7")
     _add(t_stud_month, "M-STUD")
     _add(t_stud_year, "Y-STUD")
     _add(t_ret_year, "RET")
@@ -185,15 +186,16 @@ def add_ticket_class(
     _add(t_res_year, "Y-RES")
     _add(t_75min, "75")
 
+    # Assign ticket_class via normalised title matching
     norm_series = df[title_col].map(normalise_title)
     df[out_col] = norm_series.map(mapping)
 
-    # user_category (British English spellings already ok)
+    # Derive user category from ticket_class
     user_category_map: Dict[str, str] = {
         "D-1": "Tourists",
         "D-2": "Tourists",
         "D-3": "Tourists",
-        "D-4": "Tourists",
+        "D-7": "Tourists",
         "M-STUD": "Students",
         "Y-STUD": "Students",
         "M-RES": "Residents",
@@ -202,7 +204,7 @@ def add_ticket_class(
         "75": "Occasional Travellers",
     }
     df[user_category_col] = df[out_col].map(user_category_map)
-
+    
     return df
 
 
@@ -215,15 +217,25 @@ def drop_nan_ticket_class(
     with_counts: bool = True,
 ) -> Tuple[pd.DataFrame, Dict]:
     """
-    Drop rows with missing ticket_class and report what was removed.
+    Drop rows with missing `ticket_class` and (optionally) return summary statistics.
 
-    Returns:
-    - cleaned_df
-    - stats dict (if return_stats=True) including:
-        - total_before, total_after
-        - removed_rows, removed_percentage
-        - removed_unique_titles (list)
-        - removed_titles_counts (dict) if with_counts=True
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Input validation records.
+    ticket_col, title_col : str
+        Column names.
+    return_stats : bool
+        If True, returns a statistics dictionary alongside the cleaned dataframe.
+    with_counts : bool
+        If True, includes a per-title breakdown of removed validations.
+
+    Returns
+    -------
+    cleaned_df : pd.DataFrame
+        DataFrame with rows where `ticket_class` is missing removed.
+    stats : dict
+        Summary statistics (empty if `return_stats` is False).
     """
 
     total_before = len(df)
@@ -241,13 +253,8 @@ def drop_nan_ticket_class(
         .tolist()
     )
 
-    # Unique title stats (denominator: all unique titles in the dataset)
-    total_unique_titles = (
-        df[title_col]
-        .dropna()
-        .astype(str)
-        .nunique()
-    )
+    # Unique title stats 
+    total_unique_titles = (df[title_col].dropna().astype(str).nunique())
 
     removed_unique_titles_count = len(removed_unique_titles)
 

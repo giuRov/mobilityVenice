@@ -16,7 +16,7 @@ def normalise_title(text: Any) -> Any:
     if pd.isna(text):
         return text
     s = str(text).strip()
-    s = s.replace("’", "'")  # curly apostrophe -> straight apostrophe
+    s = s.replace("’", "'")  
     s = re.sub(r"\s+", " ", s)
     return s.upper()
 
@@ -49,5 +49,4 @@ def print_processing_report(dedup_stats: Dict[str, Any], nan_ticket_stats: Dict[
         f"Records after filtering  : {nan_ticket_stats['total_after']:,}\n"
         f"Removed records          : {nan_ticket_stats['removed_rows']:,} "
         f"({nan_ticket_stats['removed_percentage']:.2f}%)\n"
-        f"Unique removed titles    : {nan_ticket_stats['removed_unique_titles_count']:,}"
     )
