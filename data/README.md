@@ -34,7 +34,7 @@ The raw validation datasets contain individual ticket validation records generat
 - spring: period associated with the Easter holidays (from 4 April to 3 June 2023);
 - summer-autumn: period associated with the Venice Film Festival (from 21 August to 20 October 2023).
 
-  Each dataset represents ticket validations. Typical columns include:
+  Each dataset represents ticket validations and includes the following columns:
    - `validation_datetime`: timestamp of the validation;
    - `serial`: anonymised card identifier;
    - `stop`: stop identifier where the validation occurred;
