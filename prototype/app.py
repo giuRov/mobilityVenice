@@ -3,7 +3,11 @@
 Dash prototype for visualising ACTV validation data.
 
 Usage (from the repository root):
-  python prototype/app.py --data data/processed/winter.csv
+  # Prototype 1 (existing): map + hourly histogram
+  python -m prototype.app --prototype 1 --data data/processed/winter.csv
+
+  # Prototype 2 (new): animated map with 3-hour bins
+  python -m prototype.app --prototype 2 --data data/processed/winter.csv
 
 Inputs
 ------
@@ -30,6 +34,7 @@ import traceback
 
 from .data_loader import load_dataset
 from .dash_app import create_app
+from .dash_app_video import create_app_video
 
 
 def parse_args() -> argparse.Namespace:
@@ -64,6 +69,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--host", type=str, default="127.0.0.1", help="Host to bind the server.")
     parser.add_argument("--port", type=int, default=8050, help="Port to bind the server.")
     parser.add_argument("--debug", action="store_true", help="Enable Dash debug mode.")
+
+    parser.add_argument(
+        "--prototype",
+        type=int,
+        choices=[1, 2],
+        default=1,
+        help="Which prototype to run: 1 = map + hourly histogram, 2 = animated 3-hour map.",
+    )
     return parser.parse_args()
 
 def main() -> None:
@@ -82,7 +95,10 @@ def main() -> None:
             land_key_areas_path=land_key_areas_path,
         )
         
-        app = create_app(df)
+        if args.prototype == 1:
+            app = create_app(df)
+        else:
+            app = create_app_video(df)
         app.run(host=args.host, port=args.port, debug=args.debug, use_reloader=False)
 
     except Exception as e:
