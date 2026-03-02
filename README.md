@@ -210,7 +210,7 @@ python -m prototype.app \
 
 Then open the local URL shown in the terminal (typically `http://127.0.0.1:8050/`).
 
-This prototype provides two coordinated visualisations:
+This prototype provides two visualisations:
   - Top panel: spatial distribution of ticket validations. The colour and size of the circles are proportional to the number of validations.
   - Bottom panel: histogram showing the distribution of validations across the hours of the day.
 
