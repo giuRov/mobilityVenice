@@ -127,10 +127,11 @@ mobilityVenice/
 │     └─ utils.py
 │
 ├─ prototype/
-│  └─ app.py                # Dash interactive prototype
-|  └─ dash_app_video.py     
-|  └─ dash_app.py     
-|  └─ data_loader.py     
+│  ├─ __init__.py
+│  ├─ app.py                # Dash interactive prototype
+|  ├─ dash_app_video.py     
+|  ├─ dash_app.py     
+|  ├─ data_loader.py     
 |  └─ stops.py     
 │
 ├─ data/
