@@ -32,11 +32,3 @@ data/processed/*
 *.csv
 *.parquet
 *.json
-
-# Allow specific datasets
-!landKeyAreas.csv
-!stopsLand.csv
-!stopsWater.csv
-!stopsLandMapped.csv
-!winter_raw.csv
-!winter.csv

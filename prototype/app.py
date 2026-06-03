@@ -2,11 +2,11 @@
 """
 Dash prototype for visualising ACTV validation data.
 
-Usage (from the repository root):
-  # Prototype 1 (existing): map + hourly histogram
+Usage:
+  # Prototype 1: map + hourly histogram
   python -m prototype.app --prototype 1 --data data/processed/winter.csv
 
-  # Prototype 2 (new): animated map with 3-hour bins
+  # Prototype 2: animated map with 3-hour bins
   python -m prototype.app --prototype 2 --data data/processed/winter.csv
 
 Inputs
