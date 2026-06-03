@@ -64,10 +64,10 @@ The processed datasets are generated using the data processing pipeline provided
 
 Each raw dataset is processed independently using the same pipeline to ensure comparability across periods.
 The processed datasets are characterised by the following attributes:
+- `validation_datetime` timestamp of the validation;
 - `serial`: serial number associated with the travel ticket;
 - `loc_id`:  if the travel ticket validation occurred at a water bus stop, the value is the identifier of the public transport stop, otherwise it is the identifier of the corresponding land area;
-- `stop_name`: name of the stop where the validation occurred;
-- `ticket_class_id`: identifier of the ticket class associated with the travel ticket title;
+- `ticket_class`: identifier of the ticket class associated with the travel ticket title;
 - `user_category`: name of the user category the ticket class belongs to.
 
 
